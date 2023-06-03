@@ -15,6 +15,7 @@
  *
  */
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,6 @@ import 'package:software/app/common/app_rating.dart';
 import 'package:software/app/common/constants.dart';
 import 'package:software/app/common/packagekit/package_page.dart';
 import 'package:software/app/common/rating_model.dart';
-import 'package:software/app/common/safe_network_image.dart';
 import 'package:software/app/common/snap/snap_page.dart';
 import 'package:software/l10n/l10n.dart';
 import 'package:software/services/appstream/appstream_utils.dart'
@@ -42,12 +42,14 @@ class AppBanner extends StatelessWidget {
     required this.showSnap,
     required this.showPackageKit,
     this.enableSearch = true,
+    this.preferSnap = true,
   });
 
   final MapEntry<String, AppFinding> appFinding;
   final bool showSnap;
   final bool showPackageKit;
   final bool enableSearch;
+  final bool preferSnap;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +57,19 @@ class AppBanner extends StatelessWidget {
             appFinding.value.appstream != null &&
             showSnap &&
             showPackageKit
-        ? () => SnapPage.push(
-              context: context,
-              snap: appFinding.value.snap!,
-              appstream: appFinding.value.appstream,
-              enableSearch: enableSearch,
-            )
+        ? () => preferSnap
+            ? SnapPage.push(
+                context: context,
+                snap: appFinding.value.snap!,
+                appstream: appFinding.value.appstream,
+                enableSearch: enableSearch,
+              )
+            : PackagePage.push(
+                context,
+                appstream: appFinding.value.appstream!,
+                snap: appFinding.value.snap,
+                enableSearch: enableSearch,
+              )
         : () {
             if (appFinding.value.appstream != null && showPackageKit) {
               PackagePage.push(
@@ -148,10 +157,11 @@ class AppImageBanner extends StatelessWidget {
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
-              child: SafeNetworkImage(
-                fallBackIcon: fallBackLoadingIcon,
-                url: snap.bannerUrl,
+              child: CachedNetworkImage(
+                imageUrl: snap.bannerUrl!,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => fallBackLoadingIcon,
+                errorWidget: (context, url, error) => fallBackLoadingIcon,
               ),
             ),
           ),

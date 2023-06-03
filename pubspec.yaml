@@ -14,6 +14,7 @@ dependencies:
   appstream: ^0.2.8
   async: ^2.10.0
   badges: ^2.0.3
+  cached_network_image: ^3.2.3
   collection: ^1.16.0
   connectivity_plus: ^2.3.1
   crypto: ^3.0.2
@@ -40,9 +41,7 @@ dependencies:
       url: https://github.com/ubuntu-flutter-community/liquid_progress_indicator
       ref: fdeb8de
   meta: ^1.7.0
-  odrs:
-    git:
-      url: https://github.com/ubuntu-flutter-community/odrs.dart
+  odrs: ^0.0.1
   package_info_plus: ^4.0.0
   packagekit: ^0.2.6
   palette_generator: ^0.3.3
@@ -52,7 +51,7 @@ dependencies:
   safe_change_notifier: ^0.2.0
   shimmer: ^2.0.0
   snapcraft_launcher: ^0.1.0
-  snapd: ^0.4.7
+  snapd: 0.4.8
   snowball_stemmer: ^0.1.0
   synchronized: ^3.0.0+3
   ubuntu_service: ^0.2.0
